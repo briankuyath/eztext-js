@@ -1,0 +1,16 @@
+{
+  "name": "eztext-js",
+  "version": "1.0.2",
+  "description": "EZTexting API for node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Kuyath <bkuyath@vidscrip.com> (http://www.vidscrip.com)",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.2",
+    "marked": "^0.3.6",
+    "request": "^2.81.0"
+  }
+}
