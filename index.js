@@ -9,30 +9,27 @@
 "use strict";
 
 /**
- * @param creds {Object}
  * @param opts {Object}
  */
-module.exports = function( creds, opts ) {
+module.exports = function( options ) {
     
-    if( ! creds ) {
-        throw new Exception("No creds defined.");
-    }
-    else if ( ! creds.username ) {
+    if ( ! options.username ) {
         throw new Exception("No username defined.");
     }
-    else if ( ! creds.password ) {
+    else if ( ! options.password ) {
         throw new Exception("No password defined.");
     }
 
-    opts = opts || {};
+    options = options || {};
 
     var options = {
-        version: opts.version || 'v1',
-        format: opts.format || 'json',
-        formEncoded: opts.formEncoded || '1'
+        apiUrl: options.apiUrl || 'https://app.eztexting.com',
+        format: options.format || 'json',
+        username: options.username,
+        password: options.password
     };
 
-    return require("./lib/eztexting")(creds, options);
+    return require("./lib/eztexting")(options);
 
 }
 

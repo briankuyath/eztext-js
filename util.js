@@ -7,7 +7,7 @@
 
 var request = require('request');
 
-module.exports = function( creds, options ) {
+module.exports = function( options ) {
 
     return {
 
@@ -28,11 +28,11 @@ module.exports = function( creds, options ) {
                 break;
                 case 'rest':
                 default:
-                    url = "https://app.eztexting.com/" + endPoint + '?format=' + options.format;
+                    url = options.apiUrl.replace(/\/?$/, '/') + endPoint + '?format=' + options.format;
                 break;
             }
 
-            url += '&User=' + creds.username + '&Password=' + creds.password + '&';
+            url += '&User=' + options.username + '&Password=' + options.password + '&';
 
             var reqMethod = 'GET';
 
@@ -43,30 +43,7 @@ module.exports = function( creds, options ) {
                 delete params._method;
             }
 
-            if( typeof params.formEncoded != 'undefined' ) {
-                
-                delete params.formEncoded;
-
-                this._sendRequestUrlEncoded(url,params,cb);
-            }
-            else {
-
-                if( params ) {
-                    
-                    // TODO: Handle parameters. Note: This could get removed altogether.    
-                    // var paramKeys = Object.keys(params);
-
-                    // if( paramKeys.length > 0 ) {
-                    //     for( var key in paramKeys ) {
-                    //         url += paramKeys[key] + '=' + params[paramKeys[key]] + '&';
-                    //     }
-                    // }
-                }
-
-                this._sendRequest( encodeURI(url), reqMethod, params, cb);
-            }
-
-            console.log( reqMethod + " " + url );
+            this._sendRequestUrlEncoded(url,params,cb);
         },
 
         /*
