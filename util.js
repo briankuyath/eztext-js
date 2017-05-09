@@ -34,15 +34,6 @@ module.exports = function( options ) {
 
             url += '&User=' + options.username + '&Password=' + options.password + '&';
 
-            var reqMethod = 'GET';
-
-            if( typeof params._method != 'undefined' ) {
-                
-                reqMethod = params._method;
-
-                delete params._method;
-            }
-
             this._sendRequestUrlEncoded(url,params,cb);
         },
 
@@ -56,7 +47,7 @@ module.exports = function( options ) {
             request({
                 url: url,
                 method: method,
-            }, 
+            },
             function(error, response, body){
 
                 if(error){
@@ -65,7 +56,7 @@ module.exports = function( options ) {
 
                 if(response.statusCode == 200 || response.statusCode == 201 ){
                     return cb(null, body);
-                } 
+                }
                 else {
                     console.log(response);
                     return cb( new Error("Server responded with error: " + response.statusCode + ' => ' + response.body) );
@@ -80,12 +71,17 @@ module.exports = function( options ) {
         * @param cb {any}
         */
         _sendRequestUrlEncoded: function( url, formData, cb ) {
-            
-            console.log("Form Data: ");
-            console.log(formData);
 
-            request.post({
-                url: url, 
+            if( formData && ! formData._method ) {
+                formData._method = 'GET';
+            }
+
+            console.log( "Route: ", formData._method + ' ' + url );
+            console.log( "Form Data: ", formData );
+
+            request({
+                method: formData._method,
+                url: url,
                 formData: formData
             }, function(error, response, body){
 
@@ -100,11 +96,15 @@ module.exports = function( options ) {
 
                    var data = JSON.parse(body);
 
+
+
                    if( data && data.Response && data.Response.Errors ) {
-                        return cb( new Error( JSON.parse( body ).Response.Errors[0] ) );
+                        return cb( {
+                            message: data.Response.Errors[0],
+                        }, data.Response );
                    }
                    else {
-                        return cb( new Error("Server responded with error: " + response.statusCode));
+                        return cb( new Error( "Server responded with error: " + response.statusCode));
                    }                   
                }
 
